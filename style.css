@@ -1,0 +1,585 @@
+  :root{
+    --bg: #F6F3EA;
+    --bg-raised: #FFFFFF;
+    --ink: #23261F;
+    --ink-soft: #565A4E;
+    --forest: #1B4332;
+    --forest-deep: #12302A;
+    --forest-light: #3A7256;
+    --gold: #C7911A;
+    --gold-soft: #E7C878;
+    --brick: #9C3D34;
+    --line: #DFD9C8;
+    --radius-s: 6px;
+    --radius-m: 10px;
+    --shadow: 0 1px 2px rgba(35,38,31,.06), 0 6px 20px -8px rgba(35,38,31,.16);
+    --focus: 2px solid #12302A;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Work Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .display {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--forest-deep);
+    margin: 0;
+  }
+
+  a { color: inherit; }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  a.card, a.crumb-btn, a.back-btn, a.result-item, a.suggestion-item {
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* ---------- Layout shell ---------- */
+
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  .topbar {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 22px 0 8px;
+    gap: 12px;
+  }
+
+  .brand {
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    font-family:"Fraunces", serif;
+    font-weight:600;
+    font-size: 1.05rem;
+    color: var(--forest-deep);
+  }
+
+  .brand-mark {
+    width: 30px; height: 30px;
+    flex: none;
+  }
+
+  .brand small {
+    display:block;
+    font-family:"Work Sans", sans-serif;
+    font-weight: 500;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+  }
+
+  /* ---------- Hero ---------- */
+
+  .hero {
+    padding: 28px 0 0;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.1rem, 5vw, 3.2rem);
+    line-height: 1.05;
+    max-width: 14ch;
+  }
+
+  .hero p.lede {
+    max-width: 52ch;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+    margin-top: 14px;
+  }
+
+  .search-wrap {
+    margin-top: 26px;
+    position: relative;
+    max-width: 560px;
+  }
+
+  .search-wrap svg.search-icon {
+    position:absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px; height: 18px;
+    color: var(--ink-soft);
+    pointer-events: none;
+  }
+
+  #search-input {
+    width: 100%;
+    font-size: 1rem;
+    font-family: inherit;
+    padding: 14px 44px 14px 46px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: var(--bg-raised);
+    color: var(--ink);
+    box-shadow: var(--shadow);
+  }
+
+  #search-input::placeholder { color: #9A9585; }
+
+  #search-clear {
+    position:absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    display: none;
+    align-items:center;
+    justify-content:center;
+    font-size: 1.1rem;
+  }
+  #search-clear:hover { background: var(--bg); }
+
+  /* compact search variant, used in the topbar of inner pages */
+  .search-wrap--compact {
+    margin-top: 0;
+    max-width: 300px;
+    flex: 1 1 220px;
+  }
+  .search-wrap--compact #search-input {
+    padding: 9px 40px 9px 40px;
+    font-size: 0.9rem;
+    box-shadow: none;
+  }
+  .search-wrap--compact svg.search-icon {
+    left: 13px;
+    width: 16px; height: 16px;
+  }
+  .search-wrap--compact #search-clear {
+    width: 26px; height: 26px;
+    right: 6px;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+  }
+
+  /* ---------- Search suggestions dropdown ---------- */
+
+  .suggestions {
+    position: absolute;
+    left: 0; right: 0;
+    top: calc(100% + 8px);
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow);
+    max-height: 360px;
+    overflow-y: auto;
+    z-index: 30;
+  }
+
+  .suggestion-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .suggestion-item:last-child { border-bottom: none; }
+  .suggestion-item:hover, .suggestion-item:focus-visible { background: var(--bg); }
+
+  .suggestion-name { font-weight: 600; font-size: 0.92rem; }
+  .suggestion-path { font-size: 0.76rem; color: var(--ink-soft); margin-top: 1px; }
+
+  .suggestion-type {
+    flex: none;
+    font-size: 0.68rem;
+    color: var(--forest-deep);
+    background: #E7EEE9;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .suggestions-more {
+    display: block;
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--forest-deep);
+    background: var(--bg);
+  }
+  .suggestions-more:hover { background: var(--line); }
+
+  .suggestions-empty {
+    padding: 16px;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  /* stat strip */
+  .stats {
+    margin-top: 30px;
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+
+  .stat {
+    background: var(--bg-raised);
+    padding: 16px 14px;
+    text-align: left;
+  }
+
+  .stat .num {
+    font-family:"Fraunces", serif;
+    font-weight: 600;
+    font-size: 1.6rem;
+    color: var(--forest-deep);
+    display:block;
+  }
+
+  .stat .label {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  /* ---------- Hill divider (signature element) ---------- */
+
+  .hills {
+    margin: 40px -20px 8px;
+    display:block;
+    width: calc(100% + 40px);
+    height: auto;
+  }
+
+  /* ---------- Inner-page header (province / commune / zone / search) ---------- */
+
+  .thin-divider {
+    margin: 26px 0 0;
+    height: 5px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--gold-soft), var(--forest-light) 55%, var(--forest-deep));
+    opacity: 0.85;
+  }
+
+  .subpage-head {
+    padding: 22px 0 0;
+  }
+
+  .subpage-head .eyebrow-meta {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+
+  .subpage-head h1 {
+    font-size: clamp(1.6rem, 4vw, 2.3rem);
+    margin-top: 6px;
+  }
+
+  .subpage-head .page-meta {
+    margin-top: 8px;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+
+  /* ---------- Breadcrumb & controls ---------- */
+
+  .toolbar {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  .crumbs {
+    display:flex;
+    align-items:center;
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 0.92rem;
+  }
+
+  .crumb-btn {
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    padding: 5px 8px;
+    border-radius: var(--radius-s);
+    font-size: inherit;
+    font-family: inherit;
+  }
+  .crumb-btn:hover { background: var(--bg-raised); color: var(--ink); }
+  .crumb-btn.current {
+    color: var(--forest-deep);
+    font-weight: 600;
+    cursor: default;
+  }
+  .crumb-btn.current:hover { background: transparent; }
+
+  .crumb-sep {
+    color: #B9B29B;
+    font-size: 0.85rem;
+  }
+
+  .back-btn {
+    display:inline-flex;
+    align-items:center;
+    gap: 6px;
+    border: 1px solid var(--line);
+    background: var(--bg-raised);
+    color: var(--forest-deep);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+  .back-btn:hover { border-color: var(--forest-light); }
+  .back-btn svg { width: 14px; height: 14px; }
+
+  /* ---------- Section heading ---------- */
+
+  .level-heading {
+    margin-top: 26px;
+    display:flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .level-heading h2 {
+    font-size: 1.4rem;
+  }
+
+  .level-heading .count-pill {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+
+  /* ---------- Grid & cards ---------- */
+
+  .grid {
+    margin-top: 16px;
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    text-align: left;
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    padding: 16px 18px;
+    display:flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+
+  .card:hover, .card:focus-visible {
+    border-color: var(--forest-light);
+    transform: translateY(-2px);
+  }
+
+  .card .card-title {
+    font-family:"Fraunces", serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--forest-deep);
+  }
+
+  .card .card-meta {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+
+  .card .card-count {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 0.78rem;
+    color: var(--forest-light);
+    font-weight: 600;
+  }
+
+  /* leaf collines view */
+  .colline-list {
+    margin-top: 16px;
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .colline-pill {
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+  .colline-pill.is-quarter {
+    background: #EFEADA;
+    border-color: #E0D8BE;
+  }
+
+  .leaf-note {
+    margin-top: 10px;
+    font-size: 0.84rem;
+    color: var(--ink-soft);
+  }
+
+  .colline-pill.pill-highlight {
+    border-color: var(--gold);
+    background: #FBF1DA;
+    box-shadow: 0 0 0 3px rgba(199,145,26,.22);
+    animation: pulse 1.4s ease 2;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .not-found {
+    margin-top: 24px;
+    padding: 34px 24px;
+    text-align: center;
+    background: var(--bg-raised);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-m);
+  }
+  .not-found h2 { font-size: 1.2rem; }
+  .not-found p { color: var(--ink-soft); margin-top: 8px; }
+  .not-found a {
+    display: inline-block;
+    margin-top: 14px;
+    color: var(--forest-deep);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  /* ---------- Search results ---------- */
+
+  .results-list {
+    margin-top: 18px;
+    display:flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .result-item {
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 12px;
+    text-align:left;
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-s);
+    padding: 12px 16px;
+  }
+
+  .result-item:hover { border-color: var(--forest-light); }
+
+  .result-main .result-name {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .result-main .result-path {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  .result-type {
+    flex: none;
+    font-size: 0.7rem;
+    text-transform: lowercase;
+    color: var(--forest-deep);
+    background: #E7EEE9;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .empty-state {
+    margin-top: 20px;
+    padding: 32px 20px;
+    text-align:center;
+    background: var(--bg-raised);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-m);
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Footer ---------- */
+
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ---------- Motion & accessibility ---------- */
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .card, #content > *, .colline-pill.pill-highlight { animation: none !important; transition: none !important; }
+  }
+
+  .content-enter {
+    animation: rise .32s ease both;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .topbar { padding-top: 16px; }
+    .hero { padding-top: 12px; }
+    .search-wrap--compact { max-width: none; flex-basis: 100%; }
+  }

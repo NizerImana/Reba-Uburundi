@@ -183,6 +183,27 @@
     flex-wrap: wrap;
   }
 
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.9rem;
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: var(--ink-soft);
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+  .nav-link:hover { background: var(--bg-raised); color: var(--forest-deep); }
+  .nav-link.is-active {
+    color: var(--forest-deep);
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+  }
+
   /* ---------- Search suggestions dropdown ---------- */
 
   .suggestions {
@@ -310,6 +331,106 @@
     margin-top: 8px;
     color: var(--ink-soft);
     font-size: 0.95rem;
+  }
+
+  /* ---------- Maps ---------- */
+
+  .map-frame {
+    margin-top: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  #map { height: 460px; width: 100%; background: #E7E2D2; }
+  #province-map { height: 280px; width: 100%; background: #E7E2D2; }
+
+  .map-toolbar {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .locate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--forest);
+    background: var(--forest-deep);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .locate-btn:hover { background: var(--forest); }
+  .locate-btn:disabled { opacity: 0.6; cursor: default; }
+  .locate-btn svg { width: 15px; height: 15px; }
+
+  .map-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--line);
+    background: var(--bg-raised);
+    color: var(--forest-deep);
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .map-link-btn:hover { border-color: var(--forest-light); }
+  .map-link-btn[hidden] { display: none; }
+
+  .locate-result {
+    margin-top: 12px;
+    font-size: 0.92rem;
+    color: var(--ink);
+    min-height: 1.4em;
+  }
+  .locate-result:empty { margin-top: 0; }
+  .locate-result .locate-caveat {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .locate-result a { color: var(--forest-deep); font-weight: 600; text-decoration: underline; }
+
+  .leaflet-popup-content a { color: var(--forest-deep); font-weight: 600; }
+
+  .map-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 22px;
+    border: 1px solid var(--line);
+    background: var(--bg-raised);
+    color: var(--forest-deep);
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-decoration: none;
+  }
+  .map-cta:hover { border-color: var(--forest-light); }
+
+  .map-sub-link {
+    margin-top: 8px;
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--forest-deep);
+    text-decoration: underline;
+    font-weight: 500;
+  }
+
+  @media (max-width: 640px) {
+    #map { height: 340px; }
+    #province-map { height: 220px; }
   }
 
   /* ---------- Breadcrumb & controls ---------- */

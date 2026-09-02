@@ -69,6 +69,40 @@ function searchUrl(q){
   return `search.html?q=${encodeURIComponent(q)}`;
 }
 
+/* ---------------- Géographie : chefs-lieux des provinces ----------------
+   Coordonnées des cinq chefs-lieux provinciaux (2023). Il n'existe pas de
+   coordonnées fiables pour chaque commune, zone ou colline dans ce jeu de
+   données : la carte se limite donc au niveau province, ce qui reste
+   honnête plutôt que d'inventer une précision qu'on n'a pas. */
+
+const PROVINCE_COORDS = {
+  BUHUMUZA:    { lat: -3.2194, lng: 30.5528 }, // Cankuzo
+  BUJUMBURA:   { lat: -3.3822, lng: 29.3644 }, // Bujumbura (Mukaza)
+  BURUNGA:     { lat: -4.1330, lng: 29.8000 }, // Makamba
+  BUTANYERERA: { lat: -2.9083, lng: 29.8269 }, // Ngozi
+  GITEGA:      { lat: -3.4333, lng: 29.9000 }, // Gitega
+};
+
+function getProvinceCoords(name){
+  return PROVINCE_COORDS[name] || null;
+}
+
+function haversineKm(lat1, lng1, lat2, lng2){
+  const R = 6371;
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat/2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+function gmapsLink(lat, lng){
+  return `https://www.google.com/maps?q=${lat},${lng}`;
+}
+function gmapsDirections(fromLat, fromLng, toLat, toLng){
+  return `https://www.google.com/maps/dir/?api=1&origin=${fromLat},${fromLng}&destination=${toLat},${toLng}`;
+}
+
 /* ---------------- Fil d'ariane ---------------- */
 
 // items: [{ label, href }] — href null/absent = étape courante (non cliquable)
@@ -261,6 +295,33 @@ function notFound(message, backHref, backLabel){
   `;
 }
 
+/* ---------------- Construction d'une carte Leaflet ---------------- */
+
+function buildLeafletMap(containerId, markers, opts = {}){
+  if (typeof L === 'undefined') return null;
+  const map = L.map(containerId, { scrollWheelZoom: false });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+    maxZoom: 17,
+  }).addTo(map);
+
+  const bounds = [];
+  markers.forEach(m => {
+    const marker = L.marker([m.lat, m.lng]).addTo(map);
+    if (m.popup) marker.bindPopup(m.popup);
+    bounds.push([m.lat, m.lng]);
+  });
+
+  if (bounds.length > 1){
+    map.fitBounds(bounds, { padding: [30, 30] });
+  } else if (bounds.length === 1){
+    map.setView(bounds[0], opts.zoom || 9);
+  } else {
+    map.setView([-3.4, 29.9], 7); // vue générale du Burundi par défaut
+  }
+  return map;
+}
+
 /* ================================================================
    Initialisation par page — chaque fonction lit l'URL de sa propre
    page et construit son contenu ; la navigation d'une page à l'autre
@@ -326,6 +387,68 @@ function initProvince(){
     `;
     grid.appendChild(a);
   });
+
+  initProvinceMapWidget(pi, province);
+}
+
+function initProvinceMapWidget(pi, province){
+  const section = document.getElementById('map-section');
+  if (!section) return;
+  const coords = getProvinceCoords(province.name);
+  if (!coords){ section.hidden = true; return; }
+  section.hidden = false;
+
+  const map = buildLeafletMap('province-map', [
+    { lat: coords.lat, lng: coords.lng, popup: `<strong>${province.capital}</strong><br>Chef-lieu de ${titleCase(province.name)}` }
+  ], { zoom: 9 });
+
+  const gmapsBtn = document.getElementById('gmaps-link');
+  if (gmapsBtn) gmapsBtn.href = gmapsLink(coords.lat, coords.lng);
+
+  const btn = document.getElementById('locate-btn');
+  const resultEl = document.getElementById('locate-result');
+  const dirBtn = document.getElementById('directions-link');
+  if (!btn) return;
+
+  let userMarker = null;
+
+  btn.addEventListener('click', () => {
+    if (!navigator.geolocation){
+      resultEl.textContent = "La géolocalisation n'est pas prise en charge par ce navigateur.";
+      return;
+    }
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Localisation en cours...';
+
+    navigator.geolocation.getCurrentPosition((pos) => {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      const { latitude, longitude } = pos.coords;
+      const dist = haversineKm(latitude, longitude, coords.lat, coords.lng);
+
+      if (userMarker && map) map.removeLayer(userMarker);
+      if (map){
+        userMarker = L.circleMarker([latitude, longitude], { radius: 8, color: '#9C3D34', fillColor: '#9C3D34', fillOpacity: 0.9 }).addTo(map);
+        userMarker.bindPopup('Vous êtes ici (position approximative)').openPopup();
+        map.fitBounds([[latitude, longitude], [coords.lat, coords.lng]], { padding: [40, 40] });
+      }
+
+      resultEl.innerHTML = `Vous êtes à environ <strong>${Math.round(dist)} km</strong> du chef-lieu ${province.capital}.
+        <span class="locate-caveat">Distance à vol d'oiseau depuis votre position jusqu'au chef-lieu — pas une détection de commune ou de zone exacte.</span>`;
+
+      if (dirBtn){
+        dirBtn.href = gmapsDirections(latitude, longitude, coords.lat, coords.lng);
+        dirBtn.hidden = false;
+      }
+    }, (err) => {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      resultEl.textContent = 'Localisation impossible : ' + (err.code === 1
+        ? "l'accès à votre position a été refusé."
+        : "votre position n'a pas pu être déterminée.");
+    }, { enableHighAccuracy: true, timeout: 10000 });
+  });
 }
 
 function initCommune(){
@@ -356,6 +479,16 @@ function initCommune(){
   document.getElementById('page-title').textContent = commune.name;
   document.getElementById('page-meta').textContent =
     `Commune de ${titleCase(province.name)} · ${countZones(commune)} zones · ${fmt(totalCollinesInCommune(commune))} collines et quartiers`;
+
+  const mapLink = document.getElementById('map-link');
+  if (mapLink){
+    if (getProvinceCoords(province.name)){
+      mapLink.href = `${provinceUrl(pi)}#map-section`;
+      mapLink.hidden = false;
+    } else {
+      mapLink.hidden = true;
+    }
+  }
 
   content.innerHTML = heading('Zones', `${countZones(commune)} zones`) + `<div class="grid" id="grid"></div>`;
   const grid = document.getElementById('grid');
@@ -402,6 +535,16 @@ function initZone(){
   document.getElementById('page-title').textContent = zone.name;
   document.getElementById('page-meta').textContent =
     `Zone de la commune ${commune.name}, ${titleCase(province.name)} · ${countCollines(zone)} collines et quartiers`;
+
+  const mapLink = document.getElementById('map-link');
+  if (mapLink){
+    if (getProvinceCoords(province.name)){
+      mapLink.href = `${provinceUrl(pi)}#map-section`;
+      mapLink.hidden = false;
+    } else {
+      mapLink.hidden = true;
+    }
+  }
 
   content.innerHTML = `
     <p class="leaf-note">Plus petite unité administrative locale du Burundi.</p>
@@ -477,6 +620,72 @@ function initSearchPage(){
   });
 }
 
+function initMapPage(){
+  const markers = DATA.provinces.map((p, pi) => {
+    const c = getProvinceCoords(p.name);
+    if (!c) return null;
+    return {
+      lat: c.lat,
+      lng: c.lng,
+      popup: `<strong>${titleCase(p.name)}</strong><br>Chef-lieu : ${p.capital}<br>${countCommunes(p)} communes<br><a href="${provinceUrl(pi)}">Voir la province</a>`
+    };
+  }).filter(Boolean);
+
+  const map = buildLeafletMap('map', markers, { zoom: 8 });
+
+  const btn = document.getElementById('locate-btn');
+  const resultEl = document.getElementById('locate-result');
+  if (!btn) return;
+
+  let userMarker = null;
+
+  btn.addEventListener('click', () => {
+    if (!navigator.geolocation){
+      resultEl.textContent = "La géolocalisation n'est pas prise en charge par ce navigateur.";
+      return;
+    }
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Localisation en cours...';
+
+    navigator.geolocation.getCurrentPosition((pos) => {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      const { latitude, longitude } = pos.coords;
+
+      if (userMarker && map) map.removeLayer(userMarker);
+      if (map){
+        userMarker = L.circleMarker([latitude, longitude], { radius: 8, color: '#9C3D34', fillColor: '#9C3D34', fillOpacity: 0.9 }).addTo(map);
+        userMarker.bindPopup('Vous êtes ici (position approximative)').openPopup();
+        map.setView([latitude, longitude], 9);
+      }
+
+      let nearest = null;
+      DATA.provinces.forEach((p, pi) => {
+        const c = getProvinceCoords(p.name);
+        if (!c) return;
+        const d = haversineKm(latitude, longitude, c.lat, c.lng);
+        if (!nearest || d < nearest.d) nearest = { p, pi, d };
+      });
+
+      if (nearest){
+        resultEl.innerHTML = `Vous semblez être le plus proche du chef-lieu de la province de
+          <a href="${provinceUrl(nearest.pi)}">${titleCase(nearest.p.name)}</a>
+          (${nearest.p.capital}), à environ <strong>${Math.round(nearest.d)} km</strong>.
+          <span class="locate-caveat">Estimation basée sur la distance à vol d'oiseau jusqu'aux cinq chefs-lieux provinciaux — une position proche d'une frontière peut être approximative.</span>`;
+      } else {
+        resultEl.textContent = 'Position obtenue, mais aucune province de référence disponible pour comparer.';
+      }
+    }, (err) => {
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+      resultEl.textContent = 'Localisation impossible : ' + (err.code === 1
+        ? "l'accès à votre position a été refusé."
+        : "votre position n'a pas pu être déterminée.");
+    }, { enableHighAccuracy: true, timeout: 10000 });
+  });
+}
+
 /* ---------------- Aiguillage selon la page ---------------- */
 
 initSearchWidget();
@@ -487,4 +696,5 @@ switch (document.body.dataset.page){
   case 'commune': initCommune(); break;
   case 'zone': initZone(); break;
   case 'search': initSearchPage(); break;
+  case 'map': initMapPage(); break;
 }

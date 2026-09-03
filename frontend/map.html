@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carte du Burundi — Reba Uburundi</title>
+<title>Carte du Burundi | Reba Uburundi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,10 @@
       <span>Reba Uburundi<small>Découverte administrative</small></span>
     </a>
     <nav class="topbar-nav">
-      <a class="nav-link is-active" href="map.html">Carte</a>
+      <a class="nav-link" href="map.html">Carte</a>
+      <a class="nav-link" href="decouvrir.html">Découvrir</a>
+      <a class="nav-link" href="chiffres.html">Chiffres</a>
+      <a class="nav-link" href="favoris.html">Favoris<span class="fav-badge" id="fav-count" hidden></span></a>
     </nav>
   </div>
 
@@ -56,11 +59,16 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
       Me localiser
     </button>
+    <label class="map-link-btn" style="cursor:pointer;">
+      <input type="checkbox" id="poi-toggle" checked style="margin-right:6px;">
+      Afficher les sites touristiques
+    </label>
   </div>
   <p class="locate-result" id="locate-result"></p>
+  <p class="leaf-note">Nature en vert, culture en or, histoire en rouge : cliquez un point pour un aperçu, ou consultez la page <a href="decouvrir.html">Découvrir</a> pour en savoir plus.</p>
 
   <footer>
-    <span>Données : découpage administratif du Burundi &mdash; provinces, communes, zones et collines/quartiers. Fond de carte : OpenStreetMap.</span>
+    <span>Données : découpage administratif du Burundi (provinces, communes, zones et collines/quartiers). Fond de carte : OpenStreetMap.</span>
   </footer>
 
 </div>

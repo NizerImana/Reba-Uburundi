@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chiffres et classements | Reba Uburundi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="chiffres">
+
+<div class="page">
+
+  <div class="topbar">
+    <a class="brand" href="index.html" style="text-decoration:none;">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" fill="#F6F3EA" stroke="#1B4332" stroke-width="1.4"/>
+        <path d="M3 21c3-4 6-3 8-6s5-4 8 0 6 2 9-1" stroke="#1B4332" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <circle cx="22" cy="10" r="2.6" fill="#C7911A"/>
+      </svg>
+      <span>Reba Uburundi<small>Découverte administrative</small></span>
+    </a>
+    <nav class="topbar-nav">
+      <a class="nav-link" href="map.html">Carte</a>
+      <a class="nav-link" href="decouvrir.html">Découvrir</a>
+      <a class="nav-link" href="chiffres.html">Chiffres</a>
+      <a class="nav-link" href="favoris.html">Favoris<span class="fav-badge" id="fav-count" hidden></span></a>
+    </nav>
+  </div>
+
+  <div class="thin-divider"></div>
+
+  <div class="toolbar" style="margin-top:20px;">
+    <nav class="crumbs" aria-label="Fil d'ariane">
+      <a class="crumb-btn" href="index.html">Burundi</a>
+      <span class="crumb-sep">/</span>
+      <span class="crumb-btn current">Chiffres</span>
+    </nav>
+    <a class="back-btn" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+      Retour
+    </a>
+  </div>
+
+  <div class="subpage-head">
+    <h1>Chiffres et classements</h1>
+    <p class="page-meta">Le découpage administratif du Burundi passé au crible : population, densité, et les communes et zones qui comptent le plus d'entités.</p>
+  </div>
+
+  <div class="discover-section" style="margin-top:24px;">
+    <h2>Population par province</h2>
+    <p class="section-intro">D'après le recensement 2024.</p>
+    <div class="bar-list" id="chart-population"></div>
+  </div>
+
+  <div class="discover-section">
+    <h2>Densité de population</h2>
+    <p class="section-intro">Habitants au kilomètre carré. Bujumbura, autour de la capitale économique, est de loin la plus dense.</p>
+    <div class="bar-list" id="chart-density"></div>
+  </div>
+
+  <div class="discover-section">
+    <h2>Communes par province</h2>
+    <div class="bar-list" id="chart-communes"></div>
+  </div>
+
+  <div class="discover-section">
+    <h2>Zones par province</h2>
+    <div class="bar-list" id="chart-zones"></div>
+  </div>
+
+  <div class="discover-section">
+    <h2>Les communes avec le plus de zones</h2>
+    <ol class="rank-list" id="top-communes"></ol>
+  </div>
+
+  <div class="discover-section">
+    <h2>Les zones avec le plus de collines et quartiers</h2>
+    <ol class="rank-list" id="top-zones"></ol>
+  </div>
+
+  <div class="discover-section">
+    <h2>Distances entre chefs-lieux provinciaux</h2>
+    <p class="section-intro">Distance à vol d'oiseau, en kilomètres, entre les cinq chefs-lieux provinciaux.</p>
+    <div class="distance-table-wrap" id="distance-matrix"></div>
+  </div>
+
+  <footer>
+    <span>Données : découpage administratif du Burundi et recensement 2024 (chiffres provinciaux), reformulés à titre de repères généraux.</span>
+  </footer>
+
+</div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

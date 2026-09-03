@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Commune — Reba Uburundi</title>
+<title>Mes favoris | Reba Uburundi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body data-page="commune">
+<body data-page="favoris">
 
 <div class="page">
 
@@ -22,42 +22,40 @@
       </svg>
       <span>Reba Uburundi<small>Découverte administrative</small></span>
     </a>
-
     <nav class="topbar-nav">
       <a class="nav-link" href="map.html">Carte</a>
+      <a class="nav-link" href="decouvrir.html">Découvrir</a>
+      <a class="nav-link" href="chiffres.html">Chiffres</a>
+      <a class="nav-link" href="favoris.html">Favoris<span class="fav-badge" id="fav-count" hidden></span></a>
     </nav>
-
-    <div class="search-wrap search-wrap--compact">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <circle cx="11" cy="11" r="7"/>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-      </svg>
-      <input id="search-input" type="text" placeholder="Rechercher un lieu..." autocomplete="off" aria-label="Rechercher un lieu">
-      <button id="search-clear" type="button" aria-label="Effacer la recherche">&times;</button>
-      <div class="suggestions" id="suggestions" hidden></div>
-    </div>
   </div>
 
   <div class="thin-divider"></div>
 
   <div class="toolbar" style="margin-top:20px;">
-    <nav class="crumbs" id="crumbs" aria-label="Fil d'ariane"></nav>
-    <a class="back-btn" id="back-link" href="index.html">
+    <nav class="crumbs" aria-label="Fil d'ariane">
+      <a class="crumb-btn" href="index.html">Burundi</a>
+      <span class="crumb-sep">/</span>
+      <span class="crumb-btn current">Favoris</span>
+    </nav>
+    <a class="back-btn" href="index.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
       Retour
     </a>
   </div>
 
   <div class="subpage-head">
-    <h1 id="page-title">&nbsp;</h1>
-    <p class="page-meta" id="page-meta"></p>
-    <a class="map-sub-link" id="map-link" href="#" hidden>Voir la province sur la carte</a>
+    <h1>Mes favoris</h1>
+    <p class="page-meta">Provinces, communes, zones, collines et sites à découvrir que vous avez marqués d'une étoile. Enregistrés uniquement sur cet appareil, dans ce navigateur.</p>
   </div>
 
-  <div id="content"></div>
+  <div id="fav-empty" class="empty-state" hidden>
+    Aucun favori pour l'instant. Cliquez l'étoile sur une province, une commune, une zone, une colline ou un site à découvrir pour la retrouver ici.
+  </div>
+  <div class="fav-list" id="fav-list"></div>
 
   <footer>
-    <span>Données : découpage administratif du Burundi &mdash; provinces, communes, zones et collines/quartiers.</span>
+    <span>Données : découpage administratif du Burundi (provinces, communes, zones et collines/quartiers).</span>
   </footer>
 
 </div>

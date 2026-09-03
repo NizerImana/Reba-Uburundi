@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zone — Reba Uburundi</title>
+<title>Zone | Reba Uburundi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,6 +25,9 @@
 
     <nav class="topbar-nav">
       <a class="nav-link" href="map.html">Carte</a>
+      <a class="nav-link" href="decouvrir.html">D&eacute;couvrir</a>
+      <a class="nav-link" href="chiffres.html">Chiffres</a>
+      <a class="nav-link" href="favoris.html">Favoris<span class="fav-badge" id="fav-count" hidden></span></a>
     </nav>
 
     <div class="search-wrap search-wrap--compact">
@@ -49,7 +52,7 @@
   </div>
 
   <div class="subpage-head">
-    <h1 id="page-title">&nbsp;</h1>
+    <div class="title-row"><h1 id="page-title">&nbsp;</h1><span id="page-fav-slot" class="fav-inline"></span><button type="button" class="copy-link-btn" id="copy-link-btn">Copier le lien</button></div>
     <p class="page-meta" id="page-meta"></p>
     <a class="map-sub-link" id="map-link" href="#" hidden>Voir la province sur la carte</a>
   </div>
@@ -57,7 +60,7 @@
   <div id="content"></div>
 
   <footer>
-    <span>Données : découpage administratif du Burundi &mdash; provinces, communes, zones et collines/quartiers.</span>
+    <span>Données : découpage administratif du Burundi (provinces, communes, zones et collines/quartiers).</span>
   </footer>
 
 </div>
